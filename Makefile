@@ -2,7 +2,7 @@
 
 LATEXMK=latexmk -lualatex -latexoption=-shell-escape
 TARGET=paper-military-september-2022
-TLK=talk-mda-2020-11
+TLK=talk-mil-2022-09-2X
 
 run: $(TARGET).pdf
 
