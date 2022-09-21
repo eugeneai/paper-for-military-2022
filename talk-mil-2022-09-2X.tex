@@ -1,8 +1,8 @@
 \documentclass[10pt]{beamer}
 \usepackage{amsmath,amssymb,longtable,hhline}
 \usepackage{mathrsfs}
-\usepackage{xcolor}
 \usepackage{hyperref}
+\usepackage{xcolor}
 \usepackage{multicol}
 \usepackage{anyfontsize}
 \usepackage{minted}
@@ -174,9 +174,9 @@
   \end{enumerate}
 \end{frame}
 \begin{frame}
-  \frametitle{Основная идея АКИД}
+  \frametitle{Основная идея АКИД (на примере динамической сцены}
   \begin{enumerate}
-  \item Задача -- распознать динамику взаимодействия субъектов общения:
+  \item Распознавание динамических свойств взаимодействующих объектов:
     \begin{itemize}
     \item как объекты переходят из состояния в состояние
     \item какие свойства меняются при каждом переходе
@@ -321,44 +321,44 @@ mothur:align-check-name-parameter a ngsp:Parameter ;
     ngsp:multipleSelectionAllowed false ;
 # . . . . .
 \end{minted}
-\begin{minted}[fontsize=\tiny]{logtalk}
-:- object(queryparam(_RDF_,_Parameter_),
-          extends(ngsquerybase)).
+% \begin{minted}[fontsize=\tiny]{logtalk}
+% :- object(queryparam(_RDF_,_Parameter_),
+%           extends(ngsquerybase)).
 
-  :- public(type/1).
-  type(Type) :-
-      ::attr(type, Type).
-  :- public(name/1).
-  name(Name) :- ::attr(dc:title, literal(Name)).
-  :- public(options/1).
-  options(Value):- ::attr(options, Value).
-  :- public(options_default/1).
-  options_default(Value):-
-    ::attr(optionsDefault, Value).
-  % . . . . . . . .
-  :- public(multiple_selection_allowed/0).
-  multiple_selection_allowed:-
-    ::bool_attr(multipleSelectionAllowed).
-  :- public(required/0).
-  required:-
-    ::bool_attr(required).
-  :- public(important/0).
-  important:-
-    ::bool_attr(important).
-  :- protected(attr/2).
-  attr(NS:Name, Value):-
-    ::second(Parameter),
-    rdf_db::rdf_global_object(Value, V),
-    _RDF_::rdf(Parameter, NS:Name, V).
-  attr(Name, Value):-
-    \+ Name=_:_,!,
-    ::second(Parameter),
-    rdf_db::rdf_global_id(Value, V),
-    _RDF_::rdf(Parameter, ngsp:Name, V).
-  % . . . . .
-:- end_object.
+%   :- public(type/1).
+%   type(Type) :-
+%       ::attr(type, Type).
+%   :- public(name/1).
+%   name(Name) :- ::attr(dc:title, literal(Name)).
+%   :- public(options/1).
+%   options(Value):- ::attr(options, Value).
+%   :- public(options_default/1).
+%   options_default(Value):-
+%     ::attr(optionsDefault, Value).
+%   % . . . . . . . .
+%   :- public(multiple_selection_allowed/0).
+%   multiple_selection_allowed:-
+%     ::bool_attr(multipleSelectionAllowed).
+%   :- public(required/0).
+%   required:-
+%     ::bool_attr(required).
+%   :- public(important/0).
+%   important:-
+%     ::bool_attr(important).
+%   :- protected(attr/2).
+%   attr(NS:Name, Value):-
+%     ::second(Parameter),
+%     rdf_db::rdf_global_object(Value, V),
+%     _RDF_::rdf(Parameter, NS:Name, V).
+%   attr(Name, Value):-
+%     \+ Name=_:_,!,
+%     ::second(Parameter),
+%     rdf_db::rdf_global_id(Value, V),
+%     _RDF_::rdf(Parameter, ngsp:Name, V).
+%   % . . . . .
+% :- end_object.
 
-\end{minted}
+% \end{minted}
 \end{multicols}
 \end{frame}
 \begin{frame}
@@ -472,7 +472,7 @@ mothur:align-check-name-parameter a ngsp:Parameter ;
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Блок кода}
+\frametitle{Блок кода (интерпретация объекта)}
  Идея реализации взята из \texttt{llvmlite}${}^*$)
   \begin{columns}
     \begin{column}{0.6\textwidth}
@@ -510,7 +510,7 @@ mothur:align-check-name-parameter a ngsp:Parameter ;
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{PSM для класса Python как пример блока кода}
+  \frametitle{Модель класса Python (пример)}
 %\begin{multicols}{2}
   \begin{columns}
     \begin{column}{0.6\textwidth}
@@ -590,7 +590,7 @@ mothur:align-check-name-parameter a ngsp:Parameter ;
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Доступ к данным LOD}
+  \frametitle{Доступ к внешним графам знаний, LOD}
 
   \begin{columns}
 \begin{column}{0.5\textwidth}
@@ -602,7 +602,7 @@ mothur:align-check-name-parameter a ngsp:Parameter ;
     server(Host,Port,Path),
     sparql_query(Query, Row,
       [host(Host),port(Port),path(Path)]).
-  :- protected(server/3).  % реализовать
+   :- protected(server/3).  % реализовать
                            % при наследовании.
   :- protected(prepare/3). % подготовка запроса
   % . . . . . . . . . .    % в виде строки.
@@ -632,6 +632,49 @@ mothur:align-check-name-parameter a ngsp:Parameter ;
 
 
 \begin{frame}
+  \frametitle{Обсуждение}
+  Интересные замечания по поводу использования Logtalk:
+  \begin{itemize}
+  \item Logtalk и RDF гибки и достаточно универсальны для удобной реализации задач АКИД, выразимые в терминах анализа свойств и преобразования элементов
+  \item Наиболее полезным средством Prolog и Logtalk -- предикатная и объектная инкапсуляция: сложные рассуждения можно скрыть за интерфейсами
+  \item Необходимо дальнейшее изучение свойств языка (2009).
+  \end{itemize}
+
+  \begin{itemize}
+  \item {\color{mymauve} В настоящий момент ведется НИРОКР в области распознавания структуры текста в PDF"=документе, в частности в учебных программ вузов и их RDFa"=разметки.}
+  \item {\color{mymauve} Для размеченного инструмента разрабатывается веб-сервис редактирования компонент текста с учетом их семантики (текст, перечисление, иерархический список, ссылка на литературу и т.п.)}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Заключение}
+  Результаты, полученные к настоящему времени:
+  \begin{itemize}
+  \item Разработаны методики представления алгоритмов распознавания текстовых структур.
+  \item Разработана методика представления сценариев распознавания и трансформации в виде иерархии логических объектов.
+  \item Накоплен некоторый опыт реализации конкретных задач в области порождения кода информационных систем и анализа слабоструктурированных документов.
+  \item Существенных технических проблем пока не выявлено.
+  \end{itemize}
+  Дальнейшее развитие проекта:
+  \begin{itemize}
+  \item Создание удобных для программиста инструментов семантической LOD-разметки форм и документов.
+  \item Разработка методик программирования с преимущественным использованием статических объектов.
+  \item Реализация библиотек и для конкретных классов задач.
+  \end{itemize}
+  Исходные коды находятся на Github в разделах:
+  \begin{itemize}
+  \item \url{https://github.com/isu-enterprise},
+  \item \url{https://github.com/eugeneai}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+  \Large Спасибо за уделенное внимание!
+\end{center}
+\end{frame}
+
+\begin{frame}
   \frametitle{Приложение: Представление NGS в виде диаграммы DataFlow}
   \begin{columns}
     \begin{column}{0.6\textwidth}
@@ -659,48 +702,6 @@ mothur:align-check-name-parameter a ngsp:Parameter ;
   \vspace{1em}
   Использование MDA позволяет актуализировать структуру ПП Mothur (в н.в. 144 модуля).
 \end{frame}
-
-
-\begin{frame}
-  \frametitle{Обсуждение}
-  Интересные замечания по поводу использования Logtalk:
-  \begin{itemize}
-  \item Logtalk и RDF гибки и достаточно универсальны для удобной реализации инфраструктуры MDA;
-  \item Наиболее полезным средством Prolog и Logtalk -- предикатная и объектная инкапсуляция;
-  \item Не все средства Logtalk исследованы и протестированы: есть возможность разработки специальных методик программирования трансформаций, например, на основе перехвата сообщений.
-  \end{itemize}
-  Свойства языков, которые создают некоторые проблемы:
-  \begin{itemize}
-  \item Совсем простые задачи решаются трудно, например, обработка текста: преобразовать идентификатор в <<CamelCase>>;
-  \item Поиск в Internet и исследование спецификаций необходимых онтологий занимает много времени, но оно оправдано по сравнению со временем разработки новой;
-  \item Prolog и Logtalk не является обычным языками в MDA.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Заключение}
-  Результаты, полученные к настоящему времени:
-  \begin{itemize}
-  \item Разработаны и протестированы методики представления моделей CIM, PIM, PSM, PM.
-  \item Разработана методика представления сценариев трансформации в виде логических объектов.
-  \item Создано ядро библиотеки доступа к модельным данным на основе объектов-фасадов.
-  \item Программы трансформации протестированы, существенных технических проблем не выявлено.
-  \end{itemize}
-  Дальнейшее развитие проекта:
-  \begin{itemize}
-  \item Создание удобных для программиста инструментов семантической LOD-разметки форм и документов.
-  \item Разработка методик программирования с использованием только статических объектов Logtalk.
-  \item Реализовать библиотеки модулей трансформации для популярных сред, например, web-сред.
-  \end{itemize}
-  Исходный код проекта доступен по ссылкам: \url{https://github.com/isu-enterprise/icc.xmitransform}, \url{https://github.com/eugeneai/icc.mothurpim}.
-\end{frame}
-
-\begin{frame}
-  \begin{center}
-  \Large Спасибо за интерес к проекту!
-\end{center}
-\end{frame}
-
 
 
 \end{document}
